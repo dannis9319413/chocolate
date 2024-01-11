@@ -18,9 +18,6 @@ class OrderController extends Controller
         if (isset($request->distributor_id) && !is_null($request->distributor_id)) {
             $model = $model->where('distributor_id', '=', $request->input('distributor_id'));
         }
-        if (isset($request->product_id) && !is_null($request->product_id)) {
-            $model = $model->where('product_id', '=', $request->input('product_id'));
-        }
 
         $records = $model->get();
 
