@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Order;
 use App\Models\OrderDetail;
 
@@ -26,13 +27,19 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'back_account' => 'required|string',
             'distributor_id' => 'required|integer',
             'order_details' => 'required|array',
             'order_details.*.product_id' => 'required|integer',
             'order_details.*.quantity' => 'required|integer',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
+        }
+
+        $validatedData = $validator->validated();
 
         $order = Order::create([
             'status_id' => 1,
