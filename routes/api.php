@@ -2,6 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmailController;
+use \App\Http\Middleware\CheckTokenMiddleware;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +22,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+
+// Route::middleware([CheckTokenMiddleware::class])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::resource('/order', OrderController::class);
+// });
+
+Route::post('/send-email', [EmailController::class, 'sendEmail']);
