@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('distributors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('bank_account');
             $table->timestamps();
         });
     }
