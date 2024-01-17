@@ -16,19 +16,19 @@ class ProductsSeeder extends Seeder
         $products = [
             [
                 'name'  => '巧纖可可錠 鳳梨益生菌酵素果凍(5入)',
-                'price' => 499,
+                'price' => 300,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'name'  => '祕魯精品可可鈕扣',
-                'price' => 998,
+                'price' => 600,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'name'  => '祕魯精品可可鈕扣精品盒',
-                'price' => 1400,
+                'price' => 800,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
