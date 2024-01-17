@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->string('address');
+            $table->integer('total');
+            $table->integer('shipment');
             $table->timestamps();
 
             $table->foreign('status_id')->references('id')->on('order_statuses');

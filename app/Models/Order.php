@@ -17,5 +17,7 @@ class Order extends Model
         'name',
         'phone',
         'address',
+        'total',
+        'shipment',
     ];
 }

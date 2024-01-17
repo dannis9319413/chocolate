@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -69,8 +70,8 @@ class OrderController extends Controller
             'address' => 'required|string',
             'bank_account' => 'required|string',
             'order_details' => 'required|array',
-            'order_details.*.product_id' => 'required|integer',
-            'order_details.*.quantity' => 'required|integer',
+            'order_details.*.product_id' => 'required|string',
+            'order_details.*.quantity' => 'required|integer|min:1',
         ]);
 
         if ($validator->fails()) {
@@ -78,6 +79,20 @@ class OrderController extends Controller
         }
 
         $validatedData = $validator->validated();
+        $products = Product::all();
+        $total = 0;
+
+        foreach ($validatedData['order_details'] as &$detail) {
+            $product = $products->where('name', $detail['product_id'])->first();
+            if (!$product) {
+                return response()->json(['status' => 400, 'errors' => '找不到商品'], 400);
+            }
+            $detail['name'] = $product->name;
+            $detail['price'] = $product->price;
+            $total += $detail['quantity'] * $detail['price'];
+        }
+
+        $shipment = $total > 1000 ? 0 : 60;
 
         $order = Order::create([
             'status_id' => 1,
@@ -87,15 +102,22 @@ class OrderController extends Controller
             'phone' => $validatedData['phone'],
             'address' => $validatedData['address'],
             'bank_account' => $validatedData['bank_account'],
+            'total' => $total,
+            'shipment' => $shipment,
         ]);
 
-        foreach ($validatedData['order_details'] as $detail) {
-            OrderDetail::create([
+        $orderDetails = [];
+
+        foreach ($validatedData['order_details'] as &$detail) {
+            $orderDetails[] = [
                 'order_id' => $order->id,
-                'product_id' => $detail['product_id'],
+                'product_name' => $detail['name'],
+                'price' => $detail['price'],
                 'quantity' => $detail['quantity'],
-            ]);
+            ];
         }
+
+        OrderDetail::insert($orderDetails);
 
         $email = $validatedData['email'];
 
