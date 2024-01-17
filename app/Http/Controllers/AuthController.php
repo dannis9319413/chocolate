@@ -19,19 +19,20 @@ class AuthController extends Controller
             $user->api_token = Str::random(60);
             $user->api_token_expires_at = now()->addDays(1);
             $user->save();
-            return response()->json(['token' => $user->api_token], 200);
+            return response()->json(['status' => 200, 'token' => $user->api_token], 200);
         }
 
-        return response()->json(['status' => 401, 'message' => 'Unauthorized'], 401);
+        return response()->json(['status' => 401, 'message' => 'email或密碼錯誤'], 401);
     }
     public function logout(Request $request)
     {
         $user = Auth::user();
-        if ($user) {
-            $user->tokens()->delete();
-            return response()->json(['status' => 201, 'message' => 'Logged out successfully'], 201);
+
+        if (!$user) {
+            return response()->json(['status' => 401, 'message' => '找不到使用者'], 401);
         }
 
-        return response()->json(['status' => 401, 'message' => 'Not logged in'], 401);
+        $request->user()->forceFill(['api_token' => null])->forceFill(['api_token_expires_at' => null])->save();
+        return response()->json(['status' => 201, 'message' => '登出成功'], 201);
     }
 }
