@@ -19,14 +19,12 @@ use \App\Http\Middleware\CheckTokenMiddleware;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::group(['middleware' => 'cors'], function () {
+    Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
 
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
-
-Route::middleware('auth:api')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::resource('/order', OrderController::class);
-    Route::post('/send-email', [EmailController::class, 'sendEmail']);
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::resource('/order', OrderController::class);
+        Route::post('/send-email', [EmailController::class, 'sendEmail']);
+    });
 });
