@@ -1,0 +1,340 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "chocolate API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/login": {
+            "get": {
+                "summary": "登入獲取Token",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email address of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Password of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": ["token"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/order": {
+            "get": {
+                "summary": "根據傳入參數獲得訂單",
+                "parameters": [
+                    {
+                        "name": "status_id",
+                        "in": "query",
+                        "description": "Status ID of the order",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "distributor_id",
+                        "in": "query",
+                        "description": "Distributor ID of the order",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Name of the user",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Address of the user",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "Phone number of the user",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email address of the user",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "bank_account",
+                        "in": "query",
+                        "description": "Bank account details",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "status_id": {
+                                                "type": "integer"
+                                            },
+                                            "distributor_id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "address": {
+                                                "type": "string"
+                                            },
+                                            "phone": {
+                                                "type": "string"
+                                            },
+                                            "email": {
+                                                "type": "string"
+                                            },
+                                            "back_account": {
+                                                "type": "string"
+                                            },
+                                            "order_details": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "product_id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "quantity": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "required": ["product_id", "quantity"]
+                                                }
+                                            }
+                                        },
+                                        "required": ["status_id", "distributor_id", "name", "address", "phone", "email", "back_account", "order_details"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "新增訂單",
+                "requestBody": {
+                    "description": "Order details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status_id": {
+                                        "type": "integer"
+                                    },
+                                    "distributor_id": {
+                                        "type": "integer"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "bank_account": {
+                                        "type": "string"
+                                    },
+                                    "order_details": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "product_id": {
+                                                    "type": "integer"
+                                                },
+                                                "quantity": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "required": ["product_id", "quantity"]
+                                        }
+                                    }
+                                },
+                                "required": ["status_id", "distributor_id", "name", "address", "phone", "email", "bank_account", "order_details"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "訂單新增成功"
+                    }
+                }
+            }
+        }
+        ,
+        "/order/{id}": {
+            "put": {
+                "summary": "根據訂單ID更新訂單",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the order",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "要更新的資料",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/OrderUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "訂單更新成功"
+                    }
+                }
+            }
+        },
+        "/send-email": {
+            "post": {
+                "summary": "發送Email",
+                "requestBody": {
+                    "description": "Email details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmailRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email sent successfully"
+                    }
+                }
+            }
+        }        
+    },
+    "components": {
+        "schemas": {
+            "Order": {
+                "type": "object",
+                "properties": {
+                    "back_account": {
+                        "type": "string"
+                    },
+                    "distributor_id": {
+                        "type": "integer"
+                    },
+                    "order_details": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "product_id": {
+                                    "type": "integer"
+                                },
+                                "quantity": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": ["product_id", "quantity"]
+                        }
+                    }
+                },
+                "required": ["back_account", "distributor_id", "order_details"]
+            },
+            "OrderUpdate": {
+                "type": "object",
+                "properties": {
+                    "status_id": {
+                        "type": "integer"
+                    },
+                    "back_account": {
+                        "type": "string"
+                    }
+                },
+                "required": ["status_id", "back_account"]
+            },
+            "EmailRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    }
+                },
+                "required": ["email"]
+            }
+        }
+    }
+}
