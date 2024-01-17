@@ -17,6 +17,10 @@ Route::get('/', function () {
     return redirect('http://fetchtwshop.com');
 });
 
+Route::get('token-error', function () {
+    return response()->json(['status' => 401, 'message' => 'token錯誤'], 401);
+})->name('token-error');
+
 Route::any('{path}', function () {
     return response()->json(['status' => 404, 'message' => '沒有該網址或method錯誤'], 404);
 })->where('path', '.*');

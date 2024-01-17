@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
 
 class AuthController extends Controller
 {
@@ -13,8 +15,11 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            $token = Auth::user()->createToken('authToken')->accessToken;
-            return response()->json(['status' => 201, 'token' => $token->token], 201);
+            $user = Auth::user();
+            $user->api_token = Str::random(60);
+            $user->api_token_expires_at = now()->addDays(1);
+            $user->save();
+            return response()->json(['token' => $user->api_token], 200);
         }
 
         return response()->json(['status' => 401, 'message' => 'Unauthorized'], 401);
