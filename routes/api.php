@@ -22,11 +22,11 @@ use App\Http\Controllers\ProductController;
 Route::group(['middleware' => 'cors'], function () {
     Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
     Route::post('/order', [OrderController::class, 'store']);
+    Route::get('/product', [ProductController::class, 'index']);
 
     Route::middleware('auth:api')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::resource('/order', OrderController::class)->except('store');
-        Route::resource('/product', ProductController::class);
         Route::post('/send-email', [EmailController::class, 'sendEmail']);
     });
 });
