@@ -410,6 +410,9 @@
                                                     "name": {
                                                         "type": "string"
                                                     },
+                                                    "original_price": {
+                                                        "type": "integer"
+                                                    },
                                                     "price": {
                                                         "type": "integer"
                                                     },
