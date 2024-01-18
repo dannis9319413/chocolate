@@ -121,11 +121,19 @@ class OrderController extends Controller
 
         $email = $validatedData['email'];
 
-        Mail::send('emails.test', ['email' => $email], function ($message) use ($email) {
-            $message->from('Slimcocotw@gmail.com', 'Slimcoco');
-            $message->to($email);
-            $message->subject('感謝您的購買');
-        });
+        Mail::send(
+            'emails.chocolate',
+            [
+                'email' => $email,
+                'order' => $order,
+                'orderDetails' => $orderDetails
+            ],
+            function ($message) use ($email) {
+                $message->from('Slimcocotw@gmail.com', 'Slimcoco');
+                $message->to($email);
+                $message->subject('感謝您的購買');
+            }
+        );
 
         return response()->json(['status' => 201, 'message' => '訂單新增成功'], 201);
     }
