@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -22,6 +23,16 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        DB::table('users')->insert(
+            [
+                'name' => 'carl.chung',
+                'email' => 'carl.chung@fetchtw.com',
+                'password' => '$2y$12$U5INANyk8uRvKg.3MeXN2uV18EN7PQmqkk0vPyTCm2B92E5Q36oea',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        );
     }
 
     /**
