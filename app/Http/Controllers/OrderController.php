@@ -14,50 +14,80 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = DB::table('orders')
-            ->leftJoin('order_details', 'orders.id', '=', 'order_details.order_id');
+        $validator = Validator::make($request->all(), [
+            'status_id' => 'integer',
+            'distributor_id' => 'integer',
+            'email' => 'string',
+            'name' => 'string',
+            'phone' => 'string',
+            'address' => 'string',
+            'bank_account' => 'string',
+            'total' => 'integer',
+            'shipment' => 'integer',
+        ]);
 
-        if (isset($request->status_id) && !is_null($request->status_id)) {
-            $query = $query->where('status_id', '=', $request->input('status_id'));
-        }
-        if (isset($request->distributor_id) && !is_null($request->distributor_id)) {
-            $query = $query->where('distributor_id', '=', $request->input('distributor_id'));
-        }
-        if (isset($request->email) && !is_null($request->email)) {
-            $query = $query->where('email', 'LIKE', "%" . $request->input('email') . "%");
-        }
-        if (isset($request->name) && !is_null($request->name)) {
-            $query = $query->where('name', 'LIKE', "%" . $request->input('name') . "%");
-        }
-        if (isset($request->phone) && !is_null($request->phone)) {
-            $query = $query->where('phone', 'LIKE', "%" . $request->input('phone') . "%");
-        }
-        if (isset($request->address) && !is_null($request->address)) {
-            $query = $query->where('address', 'LIKE', "%" . $request->input('address') . "%");
-        }
-        if (isset($request->bank_account) && !is_null($request->bank_account)) {
-            $query = $query->where('bank_account', 'LIKE', "%" . $request->input('bank_account') . "%");
+        if ($validator->fails()) {
+            return response()->json(['status' => 400, 'errors' => $validator->errors()], 400);
         }
 
-        $records = $query->select('orders.*', 'order_details.product_id', 'order_details.quantity')->get();
+        $validatedData = $validator->validated();
 
-        $transformedRecords = $records->map(function ($record) {
+        $query = DB::table('orders');
+
+        if (isset($validatedData['status_id']) && !is_null($validatedData['status_id'])) {
+            $query = $query->where('status_id', '=', $validatedData['status_id']);
+        }
+        if (isset($validatedData['distributor_id']) && !is_null($validatedData['distributor_id'])) {
+            $query = $query->where('distributor_id', '=', $validatedData['distributor_id']);
+        }
+        if (isset($validatedData['email']) && !is_null($validatedData['email'])) {
+            $query = $query->where('email', 'LIKE', "%" . $validatedData['email'] . "%");
+        }
+        if (isset($validatedData['name']) && !is_null($validatedData['name'])) {
+            $query = $query->where('name', 'LIKE', "%" . $validatedData['name'] . "%");
+        }
+        if (isset($validatedData['phone']) && !is_null($validatedData['phone'])) {
+            $query = $query->where('phone', 'LIKE', "%" . $validatedData['phone'] . "%");
+        }
+        if (isset($validatedData['address']) && !is_null($validatedData['address'])) {
+            $query = $query->where('address', 'LIKE', "%" . $validatedData['address'] . "%");
+        }
+        if (isset($validatedData['bank_account']) && !is_null($validatedData['bank_account'])) {
+            $query = $query->where('bank_account', 'LIKE', "%" . $validatedData['bank_account'] . "%");
+        }
+        if (isset($validatedData['total']) && !is_null($validatedData['total'])) {
+            $query = $query->where('total', '=', $validatedData['total']);
+        }
+        if (isset($validatedData['shipment']) && !is_null($validatedData['shipment'])) {
+            $query = $query->where('shipment', '=', $validatedData['shipment']);
+        }
+
+        $orders = $query->get();
+
+        $records = $orders->map(function ($order) {
+            $orderDetails = DB::table('order_details')->where('order_id', '=', $order->id)->get();
             return [
-                'status_id' => $record->status_id,
-                'distributor_id' => $record->distributor_id,
-                'name' => $record->name,
-                'address' => $record->address,
-                'phone' => $record->phone,
-                'email' => $record->email,
-                'bank_account' => $record->bank_account,
-                'order_details' => [
-                    'product_id' => $record->product_id,
-                    'quantity' => $record->quantity,
-                ],
+                'order_id' => $order->id,
+                'status_id' => $order->status_id,
+                'distributor_id' => $order->distributor_id,
+                'email' => $order->email,
+                'name' => $order->name,
+                'phone' => $order->phone,
+                'address' => $order->address,
+                'bank_account' => $order->bank_account,
+                'total' => $order->total,
+                'shipment' => $order->shipment,
+                'order_details' => $orderDetails->map(function ($orderDetail) {
+                    return [
+                        'product_name' => $orderDetail->product_name,
+                        'price' => $orderDetail->price,
+                        'quantity' => $orderDetail->quantity,
+                    ];
+                })->toArray(),
             ];
         });
 
-        return response()->json($transformedRecords);
+        return response()->json($records);
     }
 
     public function store(Request $request)
