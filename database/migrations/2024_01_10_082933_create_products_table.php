@@ -24,21 +24,21 @@ return new class extends Migration
             [
                 'name'  => '巧纖可可錠 鳳梨益生菌酵素果凍(5入)',
                 'price' => 300,
-                'image_path' => '/public/images/product1.jpg',
+                'image_path' => '/images/product1.png',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'name'  => '祕魯精品可可鈕扣',
                 'price' => 600,
-                'image_path' => '/public/images/product2.jpg',
+                'image_path' => '/images/product2.png',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'name'  => '祕魯精品可可鈕扣精品盒',
                 'price' => 800,
-                'image_path' => '/public/images/product3.jpg',
+                'image_path' => '/images/product3.png',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
