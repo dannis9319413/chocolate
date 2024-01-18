@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('original_price');
             $table->integer('price');
             $table->string('image_path');
             $table->timestamps();
@@ -23,6 +24,7 @@ return new class extends Migration
         DB::table('products')->insert([
             [
                 'name'  => '巧纖可可錠 鳳梨益生菌酵素果凍(5入)',
+                'original_price' => 499,
                 'price' => 300,
                 'image_path' => '/images/product1.png',
                 'created_at' => now(),
@@ -30,6 +32,7 @@ return new class extends Migration
             ],
             [
                 'name'  => '祕魯精品可可鈕扣',
+                'original_price' => 998,
                 'price' => 600,
                 'image_path' => '/images/product2.png',
                 'created_at' => now(),
@@ -37,6 +40,7 @@ return new class extends Migration
             ],
             [
                 'name'  => '祕魯精品可可鈕扣精品盒',
+                'original_price' => 1497,
                 'price' => 800,
                 'image_path' => '/images/product3.png',
                 'created_at' => now(),

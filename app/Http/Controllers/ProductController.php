@@ -16,6 +16,7 @@ class ProductController extends Controller
             return [
                 'id' => $product->id,
                 'name' => $product->name,
+                'original_price' => $product->original_price,
                 'price' => $product->price,
                 'image_path' => $product->image_path,
             ];
