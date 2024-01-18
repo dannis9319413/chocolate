@@ -6,7 +6,7 @@
     },
     "paths": {
         "/login": {
-            "get": {
+            "post": {
                 "summary": "登入獲取Token",
                 "parameters": [
                     {
@@ -36,6 +36,10 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
                                         "token": {
                                             "type": "string"
                                         }
@@ -48,9 +52,59 @@
                 }
             }
         },
+        "/logout": {
+            "post": {
+                "summary": "登出",
+                "parameters": [],
+                "requestBody": {
+                    "description": "Logout details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "Authorization": {
+                                        "type": "string",
+                                        "example": "Bearer xxx"
+                                    }
+                                },
+                                "required": ["Authorization"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logout successful"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "required": ["status", "message"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/order": {
             "get": {
-                "summary": "根據傳入參數獲得訂單",
+                "summary": "根據參數獲得訂單列表",
                 "parameters": [
                     {
                         "name": "status_id",
@@ -113,6 +167,24 @@
                         "required": false,
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "total",
+                        "in": "query",
+                        "description": "total",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "shipment",
+                        "in": "query",
+                        "description": "shipment",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
                         }
                     }
                 ],
@@ -181,9 +253,6 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "status_id": {
-                                        "type": "integer"
-                                    },
                                     "distributor_id": {
                                         "type": "integer"
                                     },
@@ -218,7 +287,7 @@
                                         }
                                     }
                                 },
-                                "required": ["status_id", "distributor_id", "name", "address", "phone", "email", "bank_account", "order_details"]
+                                "required": ["distributor_id", "name", "address", "phone", "email", "bank_account", "order_details"]
                             }
                         }
                     }
@@ -229,8 +298,7 @@
                     }
                 }
             }
-        }
-        ,
+        },
         "/order/{id}": {
             "put": {
                 "summary": "根據訂單ID更新訂單",
@@ -242,6 +310,33 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status_id",
+                        "in": "query",
+                        "description": "Status ID of the order",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "distributor_id",
+                        "in": "query",
+                        "description": "Distributor ID of the order",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "bank_account",
+                        "in": "query",
+                        "description": "Bank account details",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -283,7 +378,54 @@
                     }
                 }
             }
-        }        
+        },
+        "/product": {
+            "get": {
+                "summary": "獲得商品列表",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "type": "integer"
+                                                    },
+                                                    "image_path": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": ["name", "price", "image_path"]
+                                            }
+                                        }
+                                    },
+                                    "required": ["status", "data"]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     },
     "components": {
         "schemas": {
@@ -320,11 +462,14 @@
                     "status_id": {
                         "type": "integer"
                     },
+                    "distributor_id": {
+                        "type": "integer"
+                    },
                     "back_account": {
                         "type": "string"
                     }
                 },
-                "required": ["status_id", "back_account"]
+                "required": ["status_id", "distributor_id", "back_account"]
             },
             "EmailRequest": {
                 "type": "object",
@@ -334,6 +479,13 @@
                     }
                 },
                 "required": ["email"]
+            }
+        },
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
             }
         }
     }
