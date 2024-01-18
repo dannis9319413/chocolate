@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
-use \App\Http\Middleware\CheckTokenMiddleware;
+use App\Http\Controllers\ProductController;
 
 
 /*
@@ -26,6 +26,7 @@ Route::group(['middleware' => 'cors'], function () {
     Route::middleware('auth:api')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::resource('/order', OrderController::class)->except('store');
+        Route::resource('/product', ProductController::class);
         Route::post('/send-email', [EmailController::class, 'sendEmail']);
     });
 });

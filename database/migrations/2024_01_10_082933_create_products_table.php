@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('price');
+            $table->string('image_path');
             $table->timestamps();
         });
 
@@ -23,18 +24,21 @@ return new class extends Migration
             [
                 'name'  => '巧纖可可錠 鳳梨益生菌酵素果凍(5入)',
                 'price' => 300,
+                'image_path' => '/public/images/product1.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'name'  => '祕魯精品可可鈕扣',
                 'price' => 600,
+                'image_path' => '/public/images/product2.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'name'  => '祕魯精品可可鈕扣精品盒',
                 'price' => 800,
+                'image_path' => '/public/images/product3.jpg',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
