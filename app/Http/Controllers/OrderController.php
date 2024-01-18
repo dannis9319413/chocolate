@@ -139,8 +139,9 @@ class OrderController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'status_id' => 'required|integer',
-            'distributor_id' => 'required|integer',
+            'status_id' => 'integer',
+            'distributor_id' => 'integer',
+            'bank_account' => 'string',
         ]);
 
         if ($validator->fails()) {
@@ -149,8 +150,15 @@ class OrderController extends Controller
 
         $validatedData = $validator->validated();
 
-        $order->status_id = $validatedData['status_id'];
-        $order->distributor_id = $validatedData['distributor_id'];
+        if (isset($validatedData['status_id']) && !is_null($validatedData['status_id'])) {
+            $order->status_id = $validatedData['status_id'];
+        }
+        if (isset($validatedData['distributor_id']) && !is_null($validatedData['distributor_id'])) {
+            $order->distributor_id = $validatedData['distributor_id'];
+        }
+        if (isset($validatedData['bank_account']) && !is_null($validatedData['bank_account'])) {
+            $order->bank_account = $validatedData['bank_account'];
+        }
 
         try {
             $order->save();
