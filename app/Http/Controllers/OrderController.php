@@ -100,7 +100,7 @@ class OrderController extends Controller
             'address' => 'required|string',
             'bank_account' => 'required|string',
             'order_details' => 'required|array',
-            'order_details.*.product_id' => 'required|string',
+            'order_details.*.product_id' => 'required|integer',
             'order_details.*.quantity' => 'required|integer|min:1',
         ]);
 
@@ -113,7 +113,7 @@ class OrderController extends Controller
         $total = 0;
 
         foreach ($validatedData['order_details'] as &$detail) {
-            $product = $products->where('name', $detail['product_id'])->first();
+            $product = $products->where('id', $detail['product_id'])->first();
             if (!$product) {
                 return response()->json(['status' => 400, 'errors' => '找不到商品'], 400);
             }
