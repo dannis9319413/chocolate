@@ -31,7 +31,7 @@ return new class extends Migration
                 'updated_at' => now()
             ],
             [
-                'name'  => '祕魯精品可可鈕扣',
+                'name'  => '秘魯精品可可禮盒',
                 'original_price' => 998,
                 'price' => 600,
                 'image_path' => '/images/product2.png',
@@ -39,7 +39,7 @@ return new class extends Migration
                 'updated_at' => now()
             ],
             [
-                'name'  => '祕魯精品可可鈕扣精品盒',
+                'name'  => '巧孅與秘魯可可禮盒組合',
                 'original_price' => 1497,
                 'price' => 800,
                 'image_path' => '/images/product3.png',
