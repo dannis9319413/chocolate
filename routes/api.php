@@ -26,7 +26,7 @@ Route::group(['middleware' => 'cors'], function () {
 
     Route::middleware('auth:api')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::resource('/order', OrderController::class)->except('store');
+        Route::apiResource('/order', OrderController::class)->except('store');
         Route::post('/send-email', [EmailController::class, 'sendEmail']);
     });
 });
