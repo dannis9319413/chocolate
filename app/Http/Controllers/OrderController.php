@@ -124,30 +124,39 @@ class OrderController extends Controller
 
         $shipment = $total > 1000 ? 0 : 60;
 
-        $order = Order::create([
-            'status_id' => 1,
-            'distributor_id' => $validatedData['distributor_id'],
-            'email' => $validatedData['email'],
-            'name' => $validatedData['name'],
-            'phone' => $validatedData['phone'],
-            'address' => $validatedData['address'],
-            'bank_account' => $validatedData['bank_account'],
-            'total' => $total,
-            'shipment' => $shipment,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $orderDetails = [];
+            $order = Order::create([
+                'status_id' => 1,
+                'distributor_id' => $validatedData['distributor_id'],
+                'email' => $validatedData['email'],
+                'name' => $validatedData['name'],
+                'phone' => $validatedData['phone'],
+                'address' => $validatedData['address'],
+                'bank_account' => $validatedData['bank_account'],
+                'total' => $total,
+                'shipment' => $shipment,
+            ]);
 
-        foreach ($validatedData['order_details'] as &$detail) {
-            $orderDetails[] = [
-                'order_id' => $order->id,
-                'product_name' => $detail['name'],
-                'price' => $detail['price'],
-                'quantity' => $detail['quantity'],
-            ];
+            $orderDetails = [];
+
+            foreach ($validatedData['order_details'] as &$detail) {
+                $orderDetails[] = [
+                    'order_id' => $order->id,
+                    'product_name' => $detail['name'],
+                    'price' => $detail['price'],
+                    'quantity' => $detail['quantity'],
+                ];
+            }
+
+            OrderDetail::insert($orderDetails);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => 500, 'message' => '訂單新增失敗'], 500);
         }
-
-        OrderDetail::insert($orderDetails);
 
         $email = $validatedData['email'];
 
