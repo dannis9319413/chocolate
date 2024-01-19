@@ -158,18 +158,18 @@ class OrderController extends Controller
             return response()->json(['status' => 500, 'message' => '訂單新增失敗'], 500);
         }
 
-        $email = $validatedData['email'];
+        $recipients = [$validatedData['email'], 'Slimcocotw@gmail.com'];
 
         Mail::send(
             'emails.chocolate',
             [
-                'email' => $email,
+                'email' => $validatedData['email'],
                 'order' => $order,
                 'orderDetails' => $orderDetails
             ],
-            function ($message) use ($email) {
+            function ($message) use ($recipients) {
                 $message->from('Slimcocotw@gmail.com', 'Slimcoco');
-                $message->to($email);
+                $message->to($recipients);
                 $message->subject('感謝您的購買');
             }
         );
