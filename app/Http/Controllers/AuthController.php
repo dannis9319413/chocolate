@@ -19,7 +19,7 @@ class AuthController extends Controller
             $user->api_token = Str::random(60);
             $user->api_token_expires_at = now()->addDays(1);
             $user->save();
-            return response()->json(['status' => 200, 'token' => $user->api_token], 200);
+            return response()->json(['status' => 200, 'message' => '登入成功', 'token' => $user->api_token], 200);
         }
 
         return response()->json(['status' => 401, 'message' => 'email或密碼錯誤'], 401);
